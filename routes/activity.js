@@ -50,6 +50,7 @@ exports.edit = function (req, res) {
  */
 exports.save = function (req, res) {
     console.log('Save');
+    console.log('req.body - > ' + req.body)
     res.send(200, 'Save');
 };
 
@@ -59,6 +60,7 @@ exports.save = function (req, res) {
 exports.publish = function (req, res) {
     logData(req);
     console.log('Publish');
+    console.log('req.body - > ' + req.body)
     res.send(200, 'Publish');
 };
 
@@ -68,6 +70,7 @@ exports.publish = function (req, res) {
 exports.validate = function (req, res) {
     logData(req);
     console.log('Validate');
+    console.log('req.body - > ' + req.body)
     res.send(200, 'Validate');
     console.log("end validate function!!!");
 };
@@ -77,6 +80,7 @@ exports.validate = function (req, res) {
  */
 exports.stop = function (req, res) {
     console.log('Stop');
+    console.log('req.body - > ' + req.body)
     logData(req);
     res.send(200, 'Stop');
 };
