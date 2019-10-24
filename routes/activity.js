@@ -85,6 +85,7 @@ exports.stop = function (req, res) {
  * POST Handler for /execute/ route of Activity.
  */
 exports.execute = function (req, res) {
+    console.log('req.body - > ' + req.body);
     JWT(req.body, process.env.JWT_KEY, (err, decoded) => {
         let responseBody = '';
         if (err) {
