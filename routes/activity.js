@@ -86,6 +86,8 @@ exports.stop = function (req, res) {
  */
 exports.execute = function (req, res) {
     console.log('req.body - > ' + req.body);
+    var bodyTest = req.body;
+    console.log('CONVERTED BODY - > ' + bodyTest.toString('utf8'));
     JWT(req.body, process.env.JWT_KEY, (err, decoded) => {
         let responseBody = '';
         if (err) {
