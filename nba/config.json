@@ -32,7 +32,7 @@
                 "accountId" : ""
             }],
             "outArguments": [], 
-            "url": "https://mock-nba-sit.azurewebsites.net/nba/journeybuilder/execute",
+            "url": "https://mcnbacustomactivity.azurewebsites.net/nba/journeybuilder/execute",
             "verb": "POST",
             "body": "", 
             "header": "", 
@@ -45,25 +45,25 @@
     "configurationArguments": {
         "applicationExtensionKey": "",
         "save": {
-            "url": "https://mock-nba-sit.azurewebsites.net/nba/journeybuilder/save",
+            "url": "https://mcnbacustomactivity.azurewebsites.net/nba/journeybuilder/save",
             "body": "", 
             "verb": "POST",
             "useJwt": true
         },
         "publish": {
-            "url": "https://mock-nba-sit.azurewebsites.net/nba/journeybuilder/publish",
+            "url": "https://mcnbacustomactivity.azurewebsites.net/nba/journeybuilder/publish",
             "verb": "POST",
             "body": "", 
             "useJwt": true
         },
         "validate": {
-            "url": "https://mock-nba-sit.azurewebsites.net/nba/journeybuilder/validate",
+            "url": "https://mcnbacustomactivity.azurewebsites.net/nba/journeybuilder/validate",
             "verb": "POST",
             "body": "", 
             "useJwt": true
         },
         "stop" : {
-            "url" : "https://mock-nba-sit.azurewebsites.net/nba/journeybuilder/stop",
+            "url" : "https://mcnbacustomactivity.azurewebsites.net/nba/journeybuilder/stop",
             "verb" : "POST",
             "body" : "",
             "useJwt" : true
