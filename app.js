@@ -46,9 +46,9 @@ console.log('IN APP.JS - >');
 
 // Configure Express
 app.set('port', process.env.PORT || 3000);
-//app.use(bodyParser.raw({type: 'application/jwt'}));
+app.use(bodyParser.raw({type: 'application/jwt'}));
 app.use(express.static(path.join(__dirname, 'nba')));
-//app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }));
 //app.use(bodyParser.json());
 
 // Express in Development Mode
