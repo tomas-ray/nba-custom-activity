@@ -65,11 +65,11 @@ exports.publish = function (req, res) {
     logData(req);
     console.log('Publish use jwt false');
     //console.log('req - >' + req);
-    console.log('req - > ' + jsonCircular.stringify(req));
-    console.log('req.body - > ' + req.body);
-    console.log('req.body - > ' + req.body.data);
-    console.log('req.body - > ' + jsonCircular.stringify(req.body));
-    console.log('req.body - > ' + jsonCircular.stringify(req.body.data));
+    console.log('WHOLE REQUEST- > ' + jsonCircular.stringify(req));
+    console.log('REQUEST.BODY - > ' + req.body);
+    console.log('REQUEST.BODY.DATA - > ' + req.body.data);
+    console.log('STRINGIFIED REQ.BODY - > ' + jsonCircular.stringify(req.body));
+    console.log('STRINGIFIED REQ.BODY.DATA- > ' + jsonCircular.stringify(req.body.data));
     res.send(200, 'Publish');
 };
 
