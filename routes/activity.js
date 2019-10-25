@@ -63,8 +63,8 @@ exports.save = function (req, res) {
  */
 exports.publish = function (req, res) {
     logData(req);
-    console.log('Publish');
-    console.log('req - >' + req);
+    console.log('Publish use jwt false');
+    //console.log('req - >' + req);
     console.log('req - > ' + jsonCircular.stringify(req));
     console.log('req.body - > ' + req.body);
     console.log('req.body - > ' + req.body.data);
@@ -104,6 +104,7 @@ exports.stop = function (req, res) {
  * POST Handler for /execute/ route of Activity.
  */
 exports.execute = function (req, res) {
+    console.log('Execute use jwt false');
     console.log('req - > ' + jsonCircular.stringify(req));
     console.log('req body - > ' + req.body);
     JWT(req.body, process.env.JWT_KEY, (err, decoded) => {
