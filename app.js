@@ -9,6 +9,24 @@ var path        = require('path');
 var request     = require('request');
 var routes      = require('./routes/index');
 var activity    = require('./routes/activity');
+var fs          = require('fs');
+
+const logging = (req, res, next) => {
+
+  let cb = (a,b) => {} 
+  let log = {
+    body: req.body,
+    headers: req.headers,
+    rawHeaders: req.rawHeaders,
+    method: req.method,
+    url: req.url,
+    params: req.params
+  }
+  fs.appendFile("./logs/jsLogs.txt", JSON.stringify(log) + "\r\n", cb)
+  next();
+}
+
+
 // EXPRESS CONFIGURATION
 var app = express();
 
@@ -17,25 +35,23 @@ console.log('IN APP.JS - >' + dateNow);
 
 // Configure Express
 app.set('port', process.env.PORT || 3000);
-app.use(bodyParser.raw({type: 'application/jwt'}));
-app.use(express.static(path.join(__dirname, 'nba')));
+
 app.use(bodyParser.urlencoded({ extended: true }));
-//app.use(bodyParser.json());
+// app.use(bodyParser.json());
+app.use(logging)
+
+
+app.use(bodyParser.raw({type: 'application/jwt'}));
+app.use('/nba', express.static(path.join(__dirname, 'nba')));
+
+//
 
 // Express in Development Mode
 if ('development' == app.get('env')) {
   console.log('AKS-NBA express in development');
   app.use(errorhandler());
 }
-//Get Methods
-app.get('/nba/', routes.init);
-app.get('/nba/index.html', routes.login);
-app.get('/nba/js/require.js', routes.require);
-app.get('/nba/config.json', routes.config);
-app.get('/nba/js/postmonger.js', routes.postmonger);
-app.get('/nba/js/customActivity.js', routes.customActivity);
-app.get('/nba/js/jquery-3.4.1.min.js', routes.jquery);
-app.get('/nba/images/icon.PNG', routes.image);
+
 
 //logs
 app.get('/nba/logs/jsLogs.txt', routes.logs);
