@@ -24,6 +24,7 @@
                 "campaignId" : "",
                 "campaignName" : "",
                 "clientId" : "",
+                "dataExtensionName" : "",
                 "microSegment" : "",
                 "campaignType" : "",
                 "campaignProductType" : "",

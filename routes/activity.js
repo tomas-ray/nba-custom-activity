@@ -1,6 +1,8 @@
 'use strict';
 var util = require('util');
+const fs = require('fs');
 
+// Deps
 const Path = require('path');
 const JWT = require(Path.join(__dirname, '..', 'lib', 'jwtDecoder.js'));
 var util = require('util');
@@ -11,8 +13,6 @@ var jsforce = require('jsforce');
 const jsonCircular = require('circular-json');
 var campaignIdValue = '';
 var connectionErrorMessage = [];
-
-console.log('ACTIVITY.JS - RUN - > ');
 
 exports.logExecuteData = [];
 
@@ -29,7 +29,7 @@ function logData(req) {
         cookies: req.cookies,
         ip: req.ip,
         path: req.path,
-        host: req.host,
+        //host: req.host,
         fresh: req.fresh,
         stale: req.stale,
         protocol: req.protocol,
@@ -39,87 +39,72 @@ function logData(req) {
 }
 
 /*
- * POST Handler for / route of Activity (this is the edit route).
- */
-exports.edit = function (req, res) {
-    logData(req);
-    res.send(200, 'Edit');
-};
-
-/*
  * POST Handler for /save/ route of Activity.
  */
 exports.save = function (req, res) {
-    console.log('Save');
-    // console.log('req - >' + req);
-    // console.log('req - > ' + jsonCircular.stringify(req));
-    // console.log('req.body - > ' + req.data);
-    // console.log('req.body - > ' + jsonCircular.stringify(req.data));
-    res.send(200, 'Save');
+    console.log('Start => Save......');
+    console.log('req body of save - > ' + jsonCircular.stringify(req.body));
+    //writeToFile('Save', '46');
+    res.status(200).send('Save');
 };
 
 /*
  * POST Handler for /publish/ route of Activity.
  */
-exports.publish = function (req, res) {
+exports.publish = function (req, res) {//console.log("publish function!!!");
     logData(req);
-    console.log('Publish use jwt false');
-    //console.log('req - >' + req);
-    console.log('WHOLE REQUEST- > ' + jsonCircular.stringify(req));
-    console.log('REQUEST.BODY - > ' + req.body);
-    console.log('REQUEST.BODY.DATA - > ' + req.body.data);
-    console.log('STRINGIFIED REQ.BODY - > ' + jsonCircular.stringify(req.body));
-    console.log('STRINGIFIED REQ.BODY.DATA- > ' + jsonCircular.stringify(req.body.data));
-    res.send(200, 'Publish');
+    console.log('Start => publish......');
+    console.log('req of publish - > ' + jsonCircular.stringify(req.body));
+    writeToFile('Req58 Publish===>' + jsonCircular.stringify(req), '58');
+    res.status(200).send('Publish');
 };
 
 /*
  * POST Handler for /validate/ route of Activity.
  */
-exports.validate = function (req, res) {
+exports.validate = function (req, res) {//console.log("validate function!!!");
     logData(req);
-    console.log('Validate');
-    // console.log('req - >' + req);
-    // console.log('req - > ' + jsonCircular.stringify(req));
-    // console.log('req.body - > ' + req.data);
-    // console.log('req.body - > ' + jsonCircular.stringify(req.data));
-    res.send(200, 'Validate');
+    console.log('Start => validate......');
+    console.log('ReqBody===>' + req.body);
+    res.status(200).send('Validate');
     console.log("end validate function!!!");
 };
 
 /*
  * POST Handler for /Stop/ route of Activity.
  */
-exports.stop = function (req, res) {
-    console.log('Stop');
-    // console.log('req - >' + req);
-    // console.log('req - > ' + jsonCircular.stringify(req));
-    // console.log('req.body - > ' + req.data);
-    // console.log('req.body - > ' + jsonCircular.stringify(req.data));
+exports.stop = function (req, res) {//console.log("stop function!!!");
+    console.log('Start => Stop......');
+    console.log('req of execute - > ' + jsonCircular.stringify(req.body));
+    writeToFile('Req79 execute===>' + jsonCircular.stringify(req), '79');
     logData(req);
-    res.send(200, 'Stop');
+    res.status(200).send('Stop');
 };
 
 /*
  * POST Handler for /execute/ route of Activity.
  */
 exports.execute = function (req, res) {
-    console.log('Execute use jwt false');
-    console.log('req - > ' + jsonCircular.stringify(req));
-    console.log('req body - > ' + req.body);
+    console.log('Start => Execute....');
+    writeToFile('Req88 Execute===>' + req, '88');
+    console.log('ReqBody===>' + req.body);
+    console.log('===========================');
+    console.log(req.body.toString('utf8'));
     JWT(req.body, process.env.JWT_KEY, (err, decoded) => {
-        let responseBody = '';
+
         if (err) {
             console.error(err);
             return res.status(401).end();
         }
+        
         if (decoded && decoded.inArguments && decoded.inArguments.length > 0) {
             console.log('##### decoded ####=>', decoded);
             var decodedArgs = decoded.inArguments[0];
+
             getMcTokenJD(decodedArgs);
 
-            return res.send(200, 'Execute');
-        
+            return res.status(200).send('Execute');
+
         } else {
             console.error('inArguments invalid.');
             return res.status(400).end();
@@ -128,34 +113,45 @@ exports.execute = function (req, res) {
     console.log("end execute function!!!");
 };
 
+function writeToFile(output,lineNumber) {
+    fs.appendFile("/home/appuser/logs/jsLogs.txt", output + "\r\n", function (err) {
 
-function getMcTokenJD(decodedArgs){
+        if (err) {
+            return console.log(err);
+        }
 
+        console.log("The file was saved for " + lineNumber);
+    });
+}
+
+function getMcTokenJD(decodedArgs) {
+    console.log('activilty.js=>line:108');
     var bodyString = JSON.stringify({
-        client_id : process.env.CLIENT_ID,
-        client_secret : process.env.CLIENT_SECRET,
-        grant_type : "client_credentials"
+        client_id: process.env.CLIENT_ID, // client id of installed app created in marketing cloud. stored as environment variable in host server
+        client_secret: process.env.CLIENT_SECRET, //client secret of installed app created in marketing cloud. stored as environment variable in host server
+        grant_type: "client_credentials" // fixed value
     });
 
     var header = {
         'Content-Type': 'application/json',
     };
 
-    var optionRequest = { 
+    var mcRequest = {
         method: 'POST',
         headers: header,
         url: process.env.AUTHENTICATIONBASE_URI + 'v2/token'
     };
 
-    request(optionRequest, function (error, response, body) {
+    request(mcRequest, function (error, response, body) {
         console.log('body ->' + body);
+        console.log('activilty.js=>line:127');
+        //writeToFile(body, "137");
         var jsonObject = JSON.parse(body);
         var token = jsonObject["access_token"];
-        getDataXMLJD(decodedArgs,token);
+        getDataXMLJD(decodedArgs, token);
     }).write(bodyString);
 }
-function getDataXMLJD(decodedArgs,token){
-
+function getDataXMLJD(decodedArgs, token) {
 
     var xml = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">' +
         '<soapenv:Header>' + 
@@ -177,84 +173,86 @@ function getDataXMLJD(decodedArgs,token){
         '</soapenv:Body>' + 
         '</soapenv:Envelope>'
 
- 
+    // example data
     const url = process.env.soap_Base_Uri + 'Service.asmx';
     console.log('URL - > ' + url);
-    const headers = {
-    'Content-Type': 'text/xml',
-    'soapAction': 'Retrieve'
-    };
+    // const headers = {
+    //     'Content-Type': 'text/xml',
+    //     'soapAction': 'Retrieve'
+    // };
 
-    axios.post(url,xml,{
-    headers: {
-    'Content-Type': 'text/xml',
-    'soapAction': 'Retrieve'
-    }
+    axios.post(url, xml, {
+        headers: {
+            'Content-Type': 'text/xml',
+            'soapAction': 'Retrieve'
+        }
     }
     ).then(response => {
+        //console.log(response.data)
         const { body, statusCode } = response.data;
         console.log('RESPONSE - > ' + response.data);
+
         var parser = require('fast-xml-parser');
         var he = require('he');
         var options = {
-            attributeNamePrefix : "@_",
-            attrNodeName: "attr",
-            textNodeName : "#text",
-            ignoreAttributes : true,
-            ignoreNameSpace : false,
-            allowBooleanAttributes : false,
-            parseNodeValue : true,
-            parseAttributeValue : false,
+            attributeNamePrefix: "@_",
+            attrNodeName: "attr", //default is 'false'
+            textNodeName: "#text",
+            ignoreAttributes: true,
+            ignoreNameSpace: false,
+            allowBooleanAttributes: false,
+            parseNodeValue: true,
+            parseAttributeValue: false,
             trimValues: true,
-            cdataTagName: "__cdata",
+            cdataTagName: "__cdata", //default is 'false'
             cdataPositionChar: "\\c",
-            localeRange: "",
+            localeRange: "", //To support non english character in tag/attribute values.
             parseTrueNumberOnly: false,
-            attrValueProcessor: a => he.decode(a, {isAttributeValue: true}),
-            tagValueProcessor : a => he.decode(a)
+            attrValueProcessor: a => he.decode(a, { isAttributeValue: true }),//default is a=>a
+            tagValueProcessor: a => he.decode(a) //default is a=>a
         };
 
-            if(parser.validate(response.data) === true) {
+        if (parser.validate(response.data) === true) { //optional (it'll return an object in case it's not valid)
+            //writeToFile(response.data, "204");
+            var jsonObj = parser.parse(response.data, options);
 
-                var jsonObj = parser.parse(response.data,options);
-
-                var soapEnvelope = jsonObj['soap:Envelope'];
-                var soapBody = soapEnvelope['soap:Body'];
-                var Property = soapBody.RetrieveResponseMsg.Results;
-                if(Property == undefined){
-                    var isOnGoing = '';
-                }
-                else{
-                    var isOnGoing = soapBody.RetrieveResponseMsg.Results.Properties.Property.Value;   
-                }
-                requestGetProductInformationJD(isOnGoing,decodedArgs,token);
-
+            var soapEnvelope = jsonObj['soap:Envelope'];
+            var soapBody = soapEnvelope['soap:Body'];
+            var Property = soapBody.RetrieveResponseMsg.Results;
+            if (Property == undefined) {
+                var isOnGoing = '';
             }
-            else{
-                console.log('PARSER NOT VALIDATE');
+            else {
+                var isOnGoing = soapBody.RetrieveResponseMsg.Results.Properties.Property.Value;
             }
+            requestGetProductInformationJD(isOnGoing, decodedArgs, token);
+
+        }
+        else {
+            console.log('PARSER NOT VALIDATE');
+        }
     }
-    ).catch(err => {console.log(err)});
+    ).catch(err => { console.log(err) });
 }
-function requestGetProductInformationJD(isOnGoing,decodedArgs,token){
-
+function requestGetProductInformationJD(isOnGoing, decodedArgs, token) {
+    console.log('activity.js => line 216');
     var bodyStringRequest = JSON.stringify({
         decisionId: decodedArgs.decisionId,
-        platform : process.env.PLATFORM,
-        audienceList : [{
-            customerId :  decodedArgs.clientId,
-            microSegment : decodedArgs.microSegment,
-            isOngoing : isOnGoing
-            }
+        platform: process.env.PLATFORM,
+        audienceList: [{
+            customerId: decodedArgs.clientId,
+            microSegment: decodedArgs.microSegment,
+            isOngoing: isOnGoing
+        }
         ],
-        campaign : {
-            campaignId : decodedArgs.campaignId,
-            campaignName : decodedArgs.campaignName,
-            campaignType : decodedArgs.campaignType,
-            campaignProductType : [
+        campaign: {
+            campaignId: decodedArgs.campaignId,
+            campaignName: decodedArgs.campaignName,
+            campaignType: decodedArgs.campaignType,
+            campaignProductType: [
                 decodedArgs.campaignProductType
             ],
-            overrideContactFramwork : decodedArgs.override
+            overrideContactFramwork: decodedArgs.override
         }
     });
 
@@ -265,36 +263,38 @@ function requestGetProductInformationJD(isOnGoing,decodedArgs,token){
         'Content-Length': bodyStringRequest.length
     };
 
-    var optionRequest = { 
+    var mcRequest = {
         method: 'POST',
         headers: header,
         url: process.env.WS_URL
-    
+
     };
-    request(optionRequest, function (error, response, body) {
-        if(error){
+    request(mcRequest, function (error, response, body) {
+        if (error) {
             connectionErrorMessage[0] = error;
             console.log('connectionErrorMessage[2] - > ' + error);
         }
-        else if(body){
+        else if (body) {
+            console.log('activity.js => line 256');
+           //writeToFile(body, "267");
             var jsonValue = JSON.parse(body);
-            if(jsonValue.status == 'PS_FAILED'){
+            if (jsonValue.status == 'PS_FAILED') {
                 console.log('connectionErrorMessage - > ' + error);
                 connectionErrorMessage[0] = jsonValue.status + '-' + jsonValue.message;
             }
         }
-        updateDataExtensionDE(body,token,decodedArgs);
+        updateDataExtensionDE(body, token, decodedArgs);
 
     }).write(bodyStringRequest);
 }
-function updateDataExtensionDE(body,token,decodedArgs){
+function updateDataExtensionDE(body, token, decodedArgs) {
     console.log('UPDATE DATA EXTENSION DE - >');
     let newProduct1 = '';
     let newProduct2 = '';
     let newProduct1Code = '';
     let newProduct2Code = '';
     let newProduct1Type = '';
-    let newProduct2Type ='';
+    let newProduct2Type = '';
     let koReasonValue = '';
     let koStatusValue = '';
     let statusValue = '';
@@ -302,13 +302,13 @@ function updateDataExtensionDE(body,token,decodedArgs){
     let customerIdValue = '';
     var hasError;
 
-
+    //koReasonFields
     let channelMismatchValue = '';
     let corporateClientsValue = '';
     let underTrustValue = '';
     let servicedByValue = '';
     let customerStatusValue = '';
-    let agentStatusValue = '';
+    let agentStatusValue = ''; //here
     let controlGroupValue = '';
     let underBankruptcyValue = '';
     let foreignAddressValue = '';
@@ -319,28 +319,30 @@ function updateDataExtensionDE(body,token,decodedArgs){
     let subClaimTypeValue = '';
     let failedTotalSumAssuredTestValue = '';
     let exclusionCodeImposedValue = '';
-    let extraMoralityValue='';
-    let isSubstandardValue='';
+    let extraMoralityValue = '';
+    let isSubstandardValue = '';
     let amlwatchListValue = '';
     let underwritingKOsValue = '';
     let existingProductsKOsValue = '';
-    let salesPersonKOsValue = ''; 
+    let salesPersonKOsValue = '';
 
 
-    if(connectionErrorMessage.length > 0){
+    if (connectionErrorMessage.length > 0) {
         console.log('HERE ->');
         statusValue = process.env.ERROR;
-        for(var i = 0; i < connectionErrorMessage.length; i++){
-            if(connectionErrorMessage[i] !== undefined){
+        for (var i = 0; i < connectionErrorMessage.length; i++) {
+            if (connectionErrorMessage[i] !== undefined) {
                 messageValue = connectionErrorMessage[i];
             }
             console.log('MESSAGE VALUE - > ' + messageValue);
         }
     }
-    else if(connectionErrorMessage.length === 0){
+    else if (connectionErrorMessage.length === 0) {
         console.log('WS API BODY - > ' + body);
+        console.log('activity.js => line 319');
+        //writeToFile(body, "331");
         var jsonValue = JSON.parse(body);
-        
+
         koStatusValue = jsonValue.koStatus;
         statusValue = jsonValue.status;
         messageValue = jsonValue.message;
@@ -367,35 +369,33 @@ function updateDataExtensionDE(body,token,decodedArgs){
         existingProductsKOsValue = jsonValue.koReason.existingProductsKOs
         salesPersonKOsValue = jsonValue.koReason.salesPersonKOs
 
-
-
-        console.log('ConnectionErrorMessage length - >' +connectionErrorMessage.length);
+        console.log('ConnectionErrorMessage length - >' + connectionErrorMessage.length);
         console.log('koStatus - > ' + koStatusValue);
         console.log('jsonKoStatus - > ' + jsonValue.koStatus);
         console.log('jsonValue.offerProducts - > ' + jsonValue.offerProducts.length);
 
-        if(jsonValue.offerProducts.length === 0 && jsonValue.koStatus == process.env.KO_STATUS_NO){
+        if (jsonValue.offerProducts.length === 0 && jsonValue.koStatus == process.env.KO_STATUS_NO) {
             console.log('1ST -> ');
             koStatusValue = process.env.KO_STATUS_YES;
         }
-        else if(jsonValue.koStatus == process.env.KO_STATUS_YES && jsonValue.offerProducts.length !== 0){
+        else if (jsonValue.koStatus == process.env.KO_STATUS_YES && jsonValue.offerProducts.length !== 0) {
             console.log('2ND -> ');
             koStatusValue = process.env.KO_STATUS_NO;
         }
-    
-        if(koStatusValue == process.env.KO_STATUS_NO && jsonValue.offerProducts.length !== 0){
+
+        if (koStatusValue == process.env.KO_STATUS_NO && jsonValue.offerProducts.length !== 0) {
             console.log('3RD - > ');
             var offerProductsSorted = jsonValue.offerProducts.slice(0);
-            offerProductsSorted.sort(function(a,b) {
+            offerProductsSorted.sort(function (a, b) {
                 return a.productRank - b.productRank;
             });
-            for(var i = 0; i < offerProductsSorted.length; i++){
-                if(i === 0){    
+            for (var i = 0; i < offerProductsSorted.length; i++) {
+                if (i === 0) {
                     newProduct1 = offerProductsSorted[i].productName;
                     newProduct1Code = offerProductsSorted[i].productCode;
                     newProduct1Type = offerProductsSorted[i].componentCode;
                 }
-                else if (i = 1){
+                else if (i = 1) {
                     newProduct2 = offerProductsSorted[i].productName;
                     newProduct2Code = offerProductsSorted[i].productCode;
                     newProduct2Type = offerProductsSorted[i].componentCode;
@@ -407,59 +407,59 @@ function updateDataExtensionDE(body,token,decodedArgs){
     console.log('koStatusValue - > ' + koStatusValue);
 
     var bodyStringInsertRowDE = JSON.stringify([
-            {
-            keys : {
-                PK : decodedArgs.decisionId + '-' + decodedArgs.journeyStepCode,
-                CampaignAudienceId : decodedArgs.decisionId
+        {
+            keys: {
+                PK: decodedArgs.decisionId + '-' + decodedArgs.journeyStepCode,
+                CampaignAudienceId: decodedArgs.decisionId
             },
-            values : {
-                customerId : decodedArgs.clientId,
-                PersonContactId : decodedArgs.contactId,
-                CampaignId : decodedArgs.campaignId,
-                journeyStepCode : decodedArgs.journeyStepCode,
-                Product1Name : newProduct1,
-                Product2Name : newProduct2,
-                Product1Code : newProduct1Code,
-                Product1ComponentCode : newProduct1Type,
-                Product2Code : newProduct2Code,
-                Product2ComponentCode : newProduct2Type,
-                koStatus : koStatusValue,
-                Status : statusValue,
-                Message : messageValue,
-                PersonContactId : decodedArgs.contactId,
-                channelMismatch : channelMismatchValue,
-                corporateClients : corporateClientsValue,
-                underTrust : underTrustValue,
-                servicedBy : servicedByValue,
-                customerStatus : customerStatusValue,
-                agentStatus : agentStatusValue,
-                controlGroup : controlGroupValue,
-                underBankruptcy : underBankruptcyValue,
-                foreignAddress : foreignAddressValue,
-                foreignMobileNumber : foreignMobileNumberValue,
-                phladeceased : phladeceasedValue,
-                claimStatus : claimStatusValue,
-                claimType : claimTypeValue,
-                subClaimType : subClaimTypeValue,
-                failedTotalSumAssuredTest : failedTotalSumAssuredTestValue,
-                exclusionCodeImposed : exclusionCodeImposedValue,
-                extraMorality : extraMoralityValue,
-                isSubstandard : isSubstandardValue,
-                amlwatchList : amlwatchListValue,
-                underwritingKOs : underwritingKOsValue,
-                existingProductsKOs : existingProductsKOsValue,
-                salesPersonKOs : salesPersonKOsValue
+            values: {
+                customerId: decodedArgs.clientId,
+                PersonContactId: decodedArgs.contactId,
+                CampaignId: decodedArgs.campaignId,
+                journeyStepCode: decodedArgs.journeyStepCode,
+                Product1Name: newProduct1,
+                Product2Name: newProduct2,
+                Product1Code: newProduct1Code,
+                Product1ComponentCode: newProduct1Type,
+                Product2Code: newProduct2Code,
+                Product2ComponentCode: newProduct2Type,
+                koStatus: koStatusValue,
+                Status: statusValue,
+                Message: messageValue,
+                PersonContactId: decodedArgs.contactId,
+                channelMismatch: channelMismatchValue,
+                corporateClients: corporateClientsValue,
+                underTrust: underTrustValue,
+                servicedBy: servicedByValue,
+                customerStatus: customerStatusValue,
+                agentStatus: agentStatusValue,
+                controlGroup: controlGroupValue,
+                underBankruptcy: underBankruptcyValue,
+                foreignAddress: foreignAddressValue,
+                foreignMobileNumber: foreignMobileNumberValue,
+                phladeceased: phladeceasedValue,
+                claimStatus: claimStatusValue,
+                claimType: claimTypeValue,
+                subClaimType: subClaimTypeValue,
+                failedTotalSumAssuredTest: failedTotalSumAssuredTestValue,
+                exclusionCodeImposed: exclusionCodeImposedValue,
+                extraMorality: extraMoralityValue,
+                isSubstandard: isSubstandardValue,
+                amlwatchList: amlwatchListValue,
+                underwritingKOs: underwritingKOsValue,
+                existingProductsKOs: existingProductsKOsValue,
+                salesPersonKOs: salesPersonKOsValue
             }
         }
     ]);
 
     console.log('bodyStringInsertRowDE -> ' + bodyStringInsertRowDE);
-    
+
     var headerInsertDE = {
         'Content-Type': 'application/json',
-        'Authorization' : 'Bearer ' + token
+        'Authorization': 'Bearer ' + token
     };
-    var optionRequestInsertDE = { 
+    var optionRequestInsertDE = {
         method: 'POST',
         headers: headerInsertDE,
         url: process.env.rest_Base_Uri + 'hub/v1/dataevents/key:' + process.env.DATA_EXTENSTION_KEY + '/rowset'
@@ -469,4 +469,6 @@ function updateDataExtensionDE(body,token,decodedArgs){
         console.log('BODY - > ' + body);
     }).write(bodyStringInsertRowDE);
 }
+
+writeToFile('hello world', '466');
 

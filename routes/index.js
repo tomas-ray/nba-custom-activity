@@ -15,12 +15,10 @@ exports.init = function(req, res) {
 };
 
 exports.login = function(req, res) {
-	console.log('Login - >');
 	res.redirect("/");
 };
 
 exports.logout = function(req, res) {
-	console.log('logout - >');
 	res.send(200, 'Log out');
 };
 exports.require = function(req,res){

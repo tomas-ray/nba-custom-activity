@@ -116,6 +116,7 @@ define(['postmonger'], function (Postmonger) {
         ];
 
         payload['metaData'].isConfigured = true;
+        console.log('payload ====>' + payload);
         connection.trigger('updateActivity', payload);
 
     }
