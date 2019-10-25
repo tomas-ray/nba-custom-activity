@@ -38,9 +38,9 @@ define(['postmonger'], function (Postmonger) {
 
     $(window).ready(onRender);
     connection.on('initActivity', initialize);
-    connection.on('requestedTokens', onGetTokens);
-    connection.on('requestedEndpoints', onGetEndpoints);
-    connection.on('requestedTriggerEventDefinition', triggerEventDefinition);
+    connection.on('requestedTokens', onGetTokens); // Get Tokens
+    connection.on('requestedEndpoints', onGetEndpoints); //Get Endpoints
+    connection.on('requestedTriggerEventDefinition', triggerEventDefinition); //Get Entry Event Information
     connection.on('requestInteractionDefaults', interactionDefaults);
     connection.on('clickedNext', save);
 

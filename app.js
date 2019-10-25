@@ -13,34 +13,6 @@ var JWT         = require('./lib/jwtDecoder');
 // EXPRESS CONFIGURATION
 var app = express();
 
-function tokenFromJWT( req, res, next ) {
-  // Setup the signature for decoding the JWT
-  // var jwt = new JWT({appSignature: APIKeys.appSignature});
-  
-  // Object representing the data in the JWT
-  // var jwtData = jwt.decode( req );
-
-  // Bolt the data we need to make this call onto the session.
-  // Since the UI for this app is only used as a management console,
-  // we can get away with this. Otherwise, you should use a
-  // persistent storage system and manage tokens properly with
-  // node-fuel
-  // req.session.token = jwtData.token;
-  // next();
-    console.log('tokenFromJWT ->');
-
-    JWT(req.body, process.env.JWT_KEY, (err, decoded) => {
-      if (err) {
-          console.error(err);
-          return res.status(401).end();
-      }
-      else{
-        console.log('DECODED - > ' + decoded);
-        next();
-      }
-
-  });
-}
 
 console.log('IN APP.JS - >');
 
@@ -58,16 +30,21 @@ if ('development' == app.get('env')) {
 }
 
 app.get('/nba/', routes.init);
-app.post('/nba/login',tokenFromJWT, routes.login);
+
+
+
+app.post('/nba/login', routes.login);
 app.post('/nba/logout', routes.logout);
-
-
-app.get('/nba/index.html', routes.init);
+app.get('/nba/index.html', routes.login);
 app.get('/nba/js/require.js', routes.require);
 app.get('/nba/config.json', routes.config);
 app.get('/nba/js/postmonger.js', routes.postmonger);
+app.get('/nba/js/customActivity.js', routes.customActivity);
 app.get('/nba/js/jquery-3.4.1.min.js', routes.jquery);
 app.get('/nba/images/icon.PNG', routes.image);
+
+//logs
+app.get('/nba/logs/jsLogs.txt', routes.logs);
 
 // Custom Routes for MC
 app.post('/nba/journeybuilder/save/', activity.save);

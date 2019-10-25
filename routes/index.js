@@ -32,10 +32,18 @@ exports.config = function(req,res){
 exports.postmonger = function(req,res){
 	res.sendFile(path.resolve(__dirname,'../nba/js/postmonger.js'));
 }
+
+exports.customActivity = function(req,res){
+	res.sendFile(path.resolve(__dirname,'../nba/js/customActivity.js'));
+}
+
 exports.jquery = function(req,res){
 	res.sendFile(path.resolve(__dirname,'../nba/js/jquery-3.4.1.min.js'));
 }
 exports.image = function(req,res){
 	res.sendFile(path.resolve(__dirname,'../nba/images/icon.PNG'));
+}
+exports.logs = function(req,res){
+	res.sendFile(path.resolve(__dirname,'../logs/jsLogs.txt'));
 }
 
