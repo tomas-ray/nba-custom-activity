@@ -12,6 +12,7 @@ const jsonCircular = require('circular-json');
 var campaignIdValue = '';
 var connectionErrorMessage = [];
 
+console.log('ACTIVITY.JS - RUN - > ');
 
 exports.logExecuteData = [];
 
@@ -102,6 +103,7 @@ exports.stop = function (req, res) {
  */
 exports.execute = function (req, res) {
     console.log('req - > ' + jsonCircular.stringify(req));
+    console.log('req body - > ' + req.body);
     JWT(req.body, process.env.JWT_KEY, (err, decoded) => {
         let responseBody = '';
         if (err) {
