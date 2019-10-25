@@ -37,7 +37,7 @@
             "body": "", 
             "header": "", 
             "format": "json",
-            "useJwt": false,
+            "useJwt": true,
             "timeout": 10000
         }
     },
@@ -48,25 +48,25 @@
             "url": "https://mcnbacustomactivity.azurewebsites.net/nba/journeybuilder/save",
             "body": "", 
             "verb": "POST",
-            "useJwt": false
+            "useJwt": true
         },
         "publish": {
             "url": "https://mcnbacustomactivity.azurewebsites.net/nba/journeybuilder/publish",
             "verb": "POST",
             "body": "", 
-            "useJwt": false
+            "useJwt": true
         },
         "validate": {
             "url": "https://mcnbacustomactivity.azurewebsites.net/nba/journeybuilder/validate",
             "verb": "POST",
             "body": "", 
-            "useJwt": false
+            "useJwt": true
         },
         "stop" : {
             "url" : "https://mcnbacustomactivity.azurewebsites.net/nba/journeybuilder/stop",
             "verb" : "POST",
             "body" : "",
-            "useJwt" : false
+            "useJwt" : true
         }
     },
     "userInterfaces":
