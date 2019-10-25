@@ -75,6 +75,7 @@ exports.validate = function (req, res) {//console.log("validate function!!!");
  */
 exports.stop = function (req, res) {//console.log("stop function!!!");
     console.log('Start => Stop......');
+    console.log('req - > ' + jsonCircular.stringify(req));
     console.log('req of execute - > ' + jsonCircular.stringify(req.body));
     writeToFile('Req79 execute===>' + jsonCircular.stringify(req), '79');
     logData(req);
