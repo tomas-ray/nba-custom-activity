@@ -54,7 +54,7 @@
             "url": "https://mcnbacustomactivity.azurewebsites.net/nba/journeybuilder/publish",
             "verb": "POST",
             "body": "", 
-            "useJwt": true
+            "useJwt": false
         },
         "validate": {
             "url": "https://mcnbacustomactivity.azurewebsites.net/nba/journeybuilder/validate",
