@@ -101,29 +101,49 @@ exports.stop = function (req, res) {
  * POST Handler for /execute/ route of Activity.
  */
 exports.execute = function (req, res) {
-    console.log('req.body - > ' + req.body);
-    var bodyTest = req.body;
-    console.log('CONVERTED BODY - > ' + bodyTest.toString('utf8'));
-    JWT(req.body, process.env.JWT_KEY, (err, decoded) => {
-        let responseBody = '';
-        if (err) {
-            console.error(err);
-            return res.status(401).end();
-        }
 
-
-        if (decoded && decoded.inArguments && decoded.inArguments.length > 0) {
-            console.log('##### decoded ####=>', decoded);
-            var decodedArgs = decoded.inArguments[0];
-            getMcTokenJD(decodedArgs);
-
-            return res.send(200, 'Execute');
-        
-        } else {
-            console.error('inArguments invalid.');
-            return res.status(400).end();
-        }
+    var bodyString = JSON.stringify({
+        client_id : process.env.CLIENT_ID,
+        client_secret : process.env.CLIENT_SECRET,
+        grant_type : "client_credentials"
     });
+
+    var header = {
+        'Content-Type': 'application/json',
+    };
+
+    var optionRequest = { 
+        method: 'POST',
+        headers: header,
+        url: process.env.AUTHENTICATIONBASE_URI + 'v2/token'
+    };
+
+    request(optionRequest, function (error, response, body) {
+        var jsonObject = JSON.parse(body);
+        var token = jsonObject["access_token"];
+        //getDataXMLJD(decodedArgs,token);
+        JWT(token, process.env.JWT_KEY, (err, decoded) => {
+            let responseBody = '';
+            if (err) {
+                console.error(err);
+                return res.status(401).end();
+            }
+    
+    
+            if (decoded && decoded.inArguments && decoded.inArguments.length > 0) {
+                console.log('##### decoded ####=>', decoded);
+                var decodedArgs = decoded.inArguments[0];
+                //getMcTokenJD(decodedArgs);
+                getDataXMLJD(decodedArgs,token);
+    
+                return res.send(200, 'Execute');
+            
+            } else {
+                console.error('inArguments invalid.');
+                return res.status(400).end();
+            }
+        });
+    }).write(bodyString);
     console.log("end execute function!!!");
 };
 
@@ -153,6 +173,7 @@ function getMcTokenJD(decodedArgs){
         getDataXMLJD(decodedArgs,token);
     }).write(bodyString);
 }
+
 function getDataXMLJD(decodedArgs,token){
 
 
