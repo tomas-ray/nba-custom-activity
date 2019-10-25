@@ -66,8 +66,10 @@ exports.publish = function (req, res) {
     console.log('Publish');
     console.log('req - >' + req);
     console.log('req - > ' + jsonCircular.stringify(req));
-    console.log('req.body - > ' + req.data);
-    console.log('req.body - > ' + jsonCircular.stringify(req.data));
+    console.log('req.body - > ' + req.body);
+    console.log('req.body - > ' + req.body.data);
+    console.log('req.body - > ' + jsonCircular.stringify(req.body));
+    console.log('req.body - > ' + jsonCircular.stringify(req.body.data));
     res.send(200, 'Publish');
 };
 
