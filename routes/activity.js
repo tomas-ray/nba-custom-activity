@@ -115,7 +115,7 @@ exports.execute = function (req, res) {
 };
 
 function writeToFile(output,lineNumber) {
-    fs.appendFile("/home/appuser/logs/jsLogs.txt", output + "\r\n", function (err) {
+    fs.appendFile("./logs/jsLogs.txt", output + "\r\n", function (err) {
 
         if (err) {
             return console.log(err);
