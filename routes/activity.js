@@ -64,10 +64,10 @@ exports.save = function (req, res) {
 exports.publish = function (req, res) {
     logData(req);
     console.log('Publish');
-    // console.log('req - >' + req);
-    // console.log('req - > ' + jsonCircular.stringify(req));
-    // console.log('req.body - > ' + req.data);
-    // console.log('req.body - > ' + jsonCircular.stringify(req.data));
+    console.log('req - >' + req);
+    console.log('req - > ' + jsonCircular.stringify(req));
+    console.log('req.body - > ' + req.data);
+    console.log('req.body - > ' + jsonCircular.stringify(req.data));
     res.send(200, 'Publish');
 };
 
